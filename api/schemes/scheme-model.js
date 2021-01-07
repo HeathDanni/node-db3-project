@@ -4,7 +4,8 @@ const db = require('../../data/db-config')
 module.exports = {
     find,
     findById,
-    findSteps
+    findSteps,
+    add
 };
 
 function find() {
@@ -24,10 +25,15 @@ function findSteps(id) {
     return db(`schemes`)
         .innerJoin(`steps`, `steps.scheme_id`, 'schemes.id')
         .where(`schemes.id`, id)
+        //need to put steps in order
 }
 
 function add(scheme) {
-
+    return db('schemes')
+        .insert(scheme)
+        .then(id => {
+            return findById(id[0]);
+        });
 }
 
 function update(changes, id) {
